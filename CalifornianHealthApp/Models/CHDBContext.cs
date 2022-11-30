@@ -5,6 +5,9 @@ namespace CalifornianHealthApp.Models
 {
     public class CHDBContext : DbContext
     {
+        public CHDBContext(DbContextOptions<CHDBContext> options) : base(options)
+        {
+        }
         public DbSet<Appointment> appointments { get; set; }
 
         public DbSet<Consultant> consultants { get; set; }
