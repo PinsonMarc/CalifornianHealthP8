@@ -1,7 +1,7 @@
 ﻿using CalifornianHealthApp.Models.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace CalifornianHealthApp.Models.Unused
+namespace CalifornianHealthApp.Models.DTOs
 {
     public class ConsultantModel
     {

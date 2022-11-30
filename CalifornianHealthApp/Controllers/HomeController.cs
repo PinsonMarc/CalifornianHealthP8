@@ -1,23 +1,30 @@
-﻿using CalifornianHealthMonolithic.Code;
-using CalifornianHealthMonolithic.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿
+using CalifornianHealthApp.Models.DTOs;
+using CalifornianHealthApp.Models.Entities;
+using CalifornianHealthApp.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace CalifornianHealthMonolithic.Controllers
+namespace CalifornianHealthApp.Controllers
 {
     
     public class HomeController : Controller
     {
+
+        protected IRepository _repo;
+        protected ILogger<BookingController> _logger;
+
+        public HomeController(IRepository repo, ILogger<BookingController> logger)
+        {
+            _repo = repo;
+            _logger = logger;
+        }
         public ActionResult Index()
         {
             ConsultantModelList conList = new ConsultantModelList();
-            CHDBContext dbContext = new CHDBContext();
-            Repository repo = new Repository();
             List<Consultant> cons = new List<Consultant>();
-            cons = repo.FetchConsultants(dbContext);
+
+            cons = _repo.FetchConsultants();
             conList.ConsultantsList = new SelectList(cons, "Id", "FName");
             conList.consultants = cons;
             return View(conList);

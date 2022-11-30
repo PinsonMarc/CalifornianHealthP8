@@ -1,6 +1,6 @@
 ﻿using CalifornianHealthApp.Models.Entities;
 
-namespace CalifornianHealthMonolithic.Code
+namespace CalifornianHealthApp.Services
 {
     public interface IRepository
     {

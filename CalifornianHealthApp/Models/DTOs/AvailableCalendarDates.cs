@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace CalifornianHealthApp.Models.Unused
+namespace CalifornianHealthApp.Models.DTOs
 {
     public class AvailableCalendarDates
     {

@@ -1,10 +1,8 @@
-﻿
-
-using CalifornianHealthApp.Models;
+﻿using CalifornianHealthApp.Models;
 using CalifornianHealthApp.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace CalifornianHealthMonolithic.Code
+namespace CalifornianHealthApp.Services
 {
     public class Repository : IRepository
     {
