@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  californianhealthapp:
+    image: ${DOCKER_REGISTRY-}californianhealthapp
+    build:
+      context: .
+      dockerfile: CalifornianHealthApp/Dockerfile
+
+  booking.api:
+    image: ${DOCKER_REGISTRY-}bookingapi
+    build:
+      context: .
+      dockerfile: Booking.API/Dockerfile
+
