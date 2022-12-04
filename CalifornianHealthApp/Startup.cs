@@ -1,5 +1,6 @@
 using CalifornianHealthApp.Models;
 using CalifornianHealthApp.Services;
+using Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace CalifornianHealthApp
@@ -38,8 +39,6 @@ namespace CalifornianHealthApp
             app.UseStaticFiles();
 
             app.UseRouting();
-
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

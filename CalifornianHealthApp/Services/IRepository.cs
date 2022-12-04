@@ -1,4 +1,4 @@
-﻿using CalifornianHealthApp.Models.Entities;
+﻿using Domain.Entities;
 
 namespace CalifornianHealthApp.Services
 {

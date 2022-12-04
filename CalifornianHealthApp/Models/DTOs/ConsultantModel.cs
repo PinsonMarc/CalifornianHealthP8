@@ -1,4 +1,4 @@
-﻿using CalifornianHealthApp.Models.Entities;
+﻿using Domain.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CalifornianHealthApp.Models.DTOs
@@ -13,9 +13,9 @@ namespace CalifornianHealthApp.Models.DTOs
 
     public class ConsultantModelList
     {
-        public List<ConsultantCalendar> consultantCalendars { get; set; }
-        public List<Consultant> consultants { get; set; }
-        public int selectedConsultantId { get; set; }
+        public List<ConsultantCalendar> ConsultantCalendars { get; set; }
+        public List<Consultant> Consultants { get; set; }
+        public int SelectedConsultantId { get; set; }
         public SelectList ConsultantsList { get; set; }
     }
 

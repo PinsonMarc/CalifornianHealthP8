@@ -6,10 +6,20 @@ services:
     build:
       context: .
       dockerfile: CalifornianHealthApp/Dockerfile
+    depends_on:
+      - booking-api
+      - sqldata
 
-  booking.api:
+  booking-api:
     image: ${DOCKER_REGISTRY-}bookingapi
     build:
       context: .
       dockerfile: Booking.API/Dockerfile
 
+  sqldata:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - SA_PASSWORD=Pass@word
+      - ACCEPT_EULA=Y
+    ports:
+      - "1433:1433"

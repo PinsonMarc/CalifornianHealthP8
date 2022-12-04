@@ -1,6 +1,6 @@
 ﻿using CalifornianHealthApp.Models;
-using CalifornianHealthApp.Models.Entities;
-using Microsoft.EntityFrameworkCore;
+using Domain;
+using Domain.Entities;
 
 namespace CalifornianHealthApp.Services
 {

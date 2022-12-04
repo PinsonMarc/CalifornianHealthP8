@@ -1,6 +1,6 @@
 ﻿
 using CalifornianHealthApp.Models.DTOs;
-using CalifornianHealthApp.Models.Entities;
+using Domain.Entities;
 using CalifornianHealthApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -26,7 +26,7 @@ namespace CalifornianHealthApp.Controllers
 
             cons = _repo.FetchConsultants();
             conList.ConsultantsList = new SelectList(cons, "Id", "FName");
-            conList.consultants = cons;
+            conList.Consultants = cons;
             return View(conList);
         }
 
