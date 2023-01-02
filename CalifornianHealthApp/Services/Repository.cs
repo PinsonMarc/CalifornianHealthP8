@@ -1,5 +1,5 @@
-﻿using CalifornianHealthApp.Models;
-using Domain;
+﻿using Domain;
+using Domain.DTO;
 using Domain.Entities;
 
 namespace CalifornianHealthApp.Services
@@ -15,7 +15,7 @@ namespace CalifornianHealthApp.Services
 
         public List<Consultant> FetchConsultants()
         {
-            var cons = _context.consultants.ToList();
+            List<Consultant> cons = _context.consultants.ToList();
             return cons;
         }
 
@@ -24,7 +24,7 @@ namespace CalifornianHealthApp.Services
             //Should the consultant detail and the calendar (available dates) be clubbed together?
             //Is this the reason the calendar is slow to load? Rethink how we can rewrite this?
 
-            return _context.consultantCalendars.ToList();
+            return null/*_context.consultantCalendars.ToList()*/;
         }
 
         public bool CreateAppointment(Appointment model)

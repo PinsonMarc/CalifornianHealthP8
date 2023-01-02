@@ -1,13 +1,13 @@
 ﻿
 using CalifornianHealthApp.Models.DTOs;
-using Domain.Entities;
 using CalifornianHealthApp.Services;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CalifornianHealthApp.Controllers
 {
-    
+
     public class HomeController : Controller
     {
 
@@ -21,8 +21,8 @@ namespace CalifornianHealthApp.Controllers
         }
         public ActionResult Index()
         {
-            ConsultantModelList conList = new ConsultantModelList();
-            List<Consultant> cons = new List<Consultant>();
+            ConsultantModelList conList = new();
+            List<Consultant> cons = new();
 
             cons = _repo.FetchConsultants();
             conList.ConsultantsList = new SelectList(cons, "Id", "FName");

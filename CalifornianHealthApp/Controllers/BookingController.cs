@@ -1,6 +1,6 @@
 ﻿using CalifornianHealthApp.Models.DTOs;
-using Domain.Entities;
 using CalifornianHealthApp.Services;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -22,12 +22,11 @@ namespace CalifornianHealthApp.Controllers
         //the consultant's availability;
         public ActionResult GetConsultantCalendar()
         {
-            var conList = new ConsultantModelList();
+            ConsultantModelList conList = new();
 
             List<Consultant> cons = _repo.FetchConsultants();
             conList.ConsultantsList = new SelectList(cons, "Id", "FName");
             conList.Consultants = cons;
-
             return View(conList);
         }
 
@@ -36,7 +35,7 @@ namespace CalifornianHealthApp.Controllers
         {
             //Code to create appointment in database
             //This needs to be reassessed. Before confirming the appointment, should we check if the consultant calendar is still available?
-            var result = _repo.CreateAppointment(model);
+            bool result = _repo.CreateAppointment(model);
 
             return View();
         }

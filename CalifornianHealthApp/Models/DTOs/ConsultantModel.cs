@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Domain.DTO;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CalifornianHealthApp.Models.DTOs
