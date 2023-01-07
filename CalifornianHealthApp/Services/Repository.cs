@@ -1,22 +1,19 @@
-﻿using Domain;
-using Domain.DTO;
+﻿using Domain.DTO;
 using Domain.Entities;
 
 namespace CalifornianHealthApp.Services
 {
     public class Repository : IRepository
     {
-        private readonly CHDBContext _context;
 
-        public Repository(CHDBContext dbContext)
+        public Repository()
         {
-            _context = dbContext;
         }
 
         public List<Consultant> FetchConsultants()
         {
-            List<Consultant> cons = _context.consultants.ToList();
-            return cons;
+            //List<Consultant> cons = _context.consultants.ToList();
+            return null;
         }
 
         public List<ConsultantCalendar> FetchConsultantCalendars()
@@ -30,7 +27,7 @@ namespace CalifornianHealthApp.Services
         public bool CreateAppointment(Appointment model)
         {
             //Should we double check here before confirming the appointment?
-            _context.appointments.Add(model);
+            //_context.appointments.Add(model);
             return true;
         }
     }

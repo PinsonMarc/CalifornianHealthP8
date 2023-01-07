@@ -1,4 +1,4 @@
-namespace PoseidonApi
+namespace CalifornianHealthApp
 {
     public class Program
     {
