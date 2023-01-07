@@ -1,19 +1,20 @@
 ﻿using Domain.DTO;
 using Domain.Entities;
 
-namespace CalifornianHealthApp.Services
+namespace Booking.API
 {
     public class Repository : IRepository
     {
-
-        public Repository()
+        private readonly CHDBContext _context;
+        public Repository(CHDBContext context)
         {
+            _context = context;
         }
 
         public List<Consultant> FetchConsultants()
         {
-            //List<Consultant> cons = _context.consultants.ToList();
-            return null;
+            List<Consultant> cons = _context.consultants.ToList();
+            return cons;
         }
 
         public List<ConsultantCalendar> FetchConsultantCalendars()

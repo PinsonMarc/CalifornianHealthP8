@@ -15,9 +15,11 @@ public class Startup
     {
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+        services.AddScoped<IRepository, Repository>();
         services.AddControllers();
         services.AddDbContext<CHDBContext>(
-            options => options.UseSqlServer(Configuration.GetConnectionString("CHDBContext")));
+            options => options.UseSqlServer(Configuration.GetConnectionString("CHDBContext"))
+        );
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: CalifornianHealthApp/Dockerfile
+    environment:
+      - BookingUrl=http://localhost:5103
     depends_on:
       - booking-api
     ports:
@@ -16,6 +18,8 @@ services:
     build:
       context: .
       dockerfile: Booking.API/Dockerfile
+    ports:
+      - "5103:80"
     depends_on:
       - sqldata
 

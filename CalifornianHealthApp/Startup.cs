@@ -15,7 +15,11 @@ namespace CalifornianHealthApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddScoped<IRepository, Repository>();
+
+            services.AddHttpClient<IBookingService, BookingService>(client =>
+            {
+                client.BaseAddress = new Uri(Configuration["BookingUrl"]);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -16,5 +16,3 @@ services:
   booking-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-    ports:
-      - "5103:80"

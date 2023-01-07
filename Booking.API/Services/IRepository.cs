@@ -1,7 +1,7 @@
 ﻿using Domain.DTO;
 using Domain.Entities;
 
-namespace CalifornianHealthApp.Services
+namespace Booking.API
 {
     public interface IRepository
     {
