@@ -24,14 +24,11 @@ namespace CalifornianHealthApp.Services
         }
 
         [HttpGet]
-        public async Task<List<ConsultantCalendar>> FetchConsultantCalendars()
+        public async Task<List<AssignAppointmentDTO>> FetchConsultantCalendars()
         {
-            //Should the consultant detail and the calendar (available dates) be clubbed together?
-            //Is this the reason the calendar is slow to load? Rethink how we can rewrite this?
-
             string responseString = await _httpClient.GetStringAsync(API.Booking.getConsultantsCalendars);
 
-            List<ConsultantCalendar> calendars = JsonConvert.DeserializeObject<List<ConsultantCalendar>>(responseString);
+            List<AssignAppointmentDTO> calendars = JsonConvert.DeserializeObject<List<AssignAppointmentDTO>>(responseString);
             return calendars;
         }
 
@@ -39,6 +36,18 @@ namespace CalifornianHealthApp.Services
         public async Task<bool> CreateAppointment(Appointment model)
         {
             //Should we double check here before confirming the appointment?
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync<Appointment>(API.Booking.createAppointment, model);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<bool>();
+            }
+            return false;
+        }
+
+        [HttpPost]
+        public async Task<bool> GetConsultantAppointments(Appointment model)
+        {
             HttpResponseMessage response = await _httpClient.PostAsJsonAsync<Appointment>(API.Booking.createAppointment, model);
 
             if (response.IsSuccessStatusCode)

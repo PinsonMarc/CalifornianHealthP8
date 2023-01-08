@@ -20,7 +20,6 @@ public class Startup
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Booking-api", Version = "v1" });
         });
 
-        services.AddScoped<IRepository, Repository>();
         services.AddControllers();
         services.AddDbContext<CHDBContext>(
             options => options.UseSqlServer(Configuration.GetConnectionString("CHDBContext"))
