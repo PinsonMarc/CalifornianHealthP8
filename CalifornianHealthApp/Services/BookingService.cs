@@ -24,16 +24,16 @@ namespace CalifornianHealthApp.Services
         }
 
         [HttpGet]
-        public async Task<List<AssignAppointmentDTO>> FetchConsultantCalendars()
+        public async Task<List<ConsultantCalendarDTO>> FetchConsultantCalendars()
         {
             string responseString = await _httpClient.GetStringAsync(API.Booking.getConsultantsCalendars);
 
-            List<AssignAppointmentDTO> calendars = JsonConvert.DeserializeObject<List<AssignAppointmentDTO>>(responseString);
+            List<ConsultantCalendarDTO> calendars = JsonConvert.DeserializeObject<List<ConsultantCalendarDTO>>(responseString);
             return calendars;
         }
 
         [HttpPost]
-        public async Task<bool> CreateAppointment(Appointment model)
+        public async Task<bool> AssignAppointment(Appointment model)
         {
             //Should we double check here before confirming the appointment?
             HttpResponseMessage response = await _httpClient.PostAsJsonAsync<Appointment>(API.Booking.createAppointment, model);
@@ -46,15 +46,16 @@ namespace CalifornianHealthApp.Services
         }
 
         [HttpPost]
-        public async Task<bool> GetConsultantAppointments(Appointment model)
+        public async Task<List<Appointment>> GetConsultantAppointments(ConsultantDailyAppointmentsDTO model)
         {
-            HttpResponseMessage response = await _httpClient.PostAsJsonAsync<Appointment>(API.Booking.createAppointment, model);
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync(API.Booking.createAppointment, model);
 
             if (response.IsSuccessStatusCode)
             {
-                return await response.Content.ReadFromJsonAsync<bool>();
+                return await response.Content.ReadFromJsonAsync<List<Appointment>>();
             }
-            return false;
+
+            return null;
         }
     }
 }

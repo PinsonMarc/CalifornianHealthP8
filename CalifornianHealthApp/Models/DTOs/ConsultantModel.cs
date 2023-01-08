@@ -18,6 +18,7 @@ namespace CalifornianHealthApp.Models.DTOs
         public List<Consultant> Consultants { get; set; }
         public int SelectedConsultantId { get; set; }
         public SelectList ConsultantsList { get; set; }
+        public SelectList DateList { get; set; }
     }
 
 }

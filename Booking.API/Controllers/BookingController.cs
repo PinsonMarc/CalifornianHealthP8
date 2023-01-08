@@ -1,6 +1,7 @@
 ﻿using Domain.DTO;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Booking.API.Controllers;
 
@@ -28,9 +29,11 @@ public class BookingController : Controller
     public List<ConsultantCalendarDTO> GetConsultantCalendars()
     {
         List<Appointment> appointments = _context.appointments
-            .Where(c => c.PatientId == null)
+            .Where(a => a.PatientId == null)
+            .Include(a => a.Consultant)
             .OrderBy(a => a.ConsultantId)
-            .ThenBy(a => a.StartDateTime).ToList();
+            .ThenBy(a => a.StartDateTime)
+            .ToList();
 
         List<ConsultantCalendarDTO> res = new();
 
@@ -47,7 +50,7 @@ public class BookingController : Controller
                 currentDate = DateTime.MinValue;
                 res.Add(new ConsultantCalendarDTO
                 {
-                    ConsultantId = currentConsultant,
+                    Consultant = appointment.Consultant,
                     Dates = new List<DateTime?>()
                 });
             }
