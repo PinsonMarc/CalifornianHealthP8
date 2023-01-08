@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Domain.DTO;
+using Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Booking.API.Controllers
 {
@@ -13,6 +15,33 @@ namespace Booking.API.Controllers
             _logger = logger;
         }
 
+        public IActionResult Index()
+        {
+            return new RedirectResult("~/swagger");
+        }
 
+        [HttpGet]
+        [Route("/Consultants")]
+        public List<Consultant> GetConsultants()
+        {
+            List<Consultant> cons = _repo.FetchConsultants();
+            return cons;
+        }
+
+        [HttpGet]
+        [Route("/ConsultantCalendars")]
+        public List<ConsultantCalendar> GetConsultantCalendars()
+        {
+            List<ConsultantCalendar> cons = _repo.FetchConsultantCalendars();
+            return cons;
+        }
+
+        [HttpPost]
+        [Route("/CreateAppointment")]
+        public List<Consultant> CreateAppointment(Appointment model)
+        {
+            List<Consultant> cons = _repo.FetchConsultants();
+            return cons;
+        }
     }
 }

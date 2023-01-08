@@ -1,5 +1,6 @@
 ﻿using Domain.DTO;
 using Domain.Entities;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace CalifornianHealthApp.Services
@@ -13,33 +14,38 @@ namespace CalifornianHealthApp.Services
             _httpClient = httpClient;
         }
 
+        [HttpGet]
         public async Task<List<Consultant>> FetchConsultants()
         {
-            //    var uri = API.Catalog.GetAllCatalogItems(_remoteServiceBaseUrl,
-            //                                         page, take, brand, type);
-
-            string responseString = await _httpClient.GetStringAsync("/Consultants");
+            string responseString = await _httpClient.GetStringAsync(API.Booking.getConsultants);
 
             List<Consultant> cons = JsonConvert.DeserializeObject<List<Consultant>>(responseString); ;
             return cons;
         }
 
+        [HttpGet]
         public async Task<List<ConsultantCalendar>> FetchConsultantCalendars()
         {
             //Should the consultant detail and the calendar (available dates) be clubbed together?
             //Is this the reason the calendar is slow to load? Rethink how we can rewrite this?
-            throw new NotImplementedException();
 
-            return null/*_context.consultantCalendars.ToList()*/;
+            string responseString = await _httpClient.GetStringAsync(API.Booking.getConsultantsCalendars);
+
+            List<ConsultantCalendar> calendars = JsonConvert.DeserializeObject<List<ConsultantCalendar>>(responseString);
+            return calendars;
         }
 
+        [HttpPost]
         public async Task<bool> CreateAppointment(Appointment model)
         {
             //Should we double check here before confirming the appointment?
-            //_context.appointments.Add(model);
-            ////await WaitCallback;
-            throw new NotImplementedException();
-            return true;
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync<Appointment>(API.Booking.createAppointment, model);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<bool>();
+            }
+            return false;
         }
     }
 }

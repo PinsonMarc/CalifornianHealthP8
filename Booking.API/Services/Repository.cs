@@ -22,13 +22,13 @@ namespace Booking.API
             //Should the consultant detail and the calendar (available dates) be clubbed together?
             //Is this the reason the calendar is slow to load? Rethink how we can rewrite this?
 
-            return null/*_context.consultantCalendars.ToList()*/;
+            return _context.consultantCalendars.ToList();
         }
 
         public bool CreateAppointment(Appointment model)
         {
             //Should we double check here before confirming the appointment?
-            //_context.appointments.Add(model);
+            _context.appointments.Add(model);
             return true;
         }
     }

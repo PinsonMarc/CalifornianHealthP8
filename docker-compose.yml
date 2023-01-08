@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: CalifornianHealthApp/Dockerfile
     environment:
-      - BookingUrl=http://localhost:5103
+      - BookingUrl=http://booking-api
     depends_on:
       - booking-api
     ports:

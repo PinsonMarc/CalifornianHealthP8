@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 namespace Booking.API;
 public class Startup
@@ -14,7 +15,11 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Booking-api", Version = "v1" });
+        });
+
         services.AddScoped<IRepository, Repository>();
         services.AddControllers();
         services.AddDbContext<CHDBContext>(
@@ -31,9 +36,13 @@ public class Startup
             if (context is not null) context.Database.EnsureCreated();
         }
 
+        app.UseSwagger();
         app.UseHttpsRedirection();
         app.UseRouting();
-
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Booking-api");
+        });
         app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
     }
 }
