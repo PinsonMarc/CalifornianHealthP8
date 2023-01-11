@@ -2,6 +2,8 @@
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace CalifornianHealthApp.Services
 {
@@ -33,26 +35,31 @@ namespace CalifornianHealthApp.Services
         }
 
         [HttpPost]
-        public async Task<bool> AssignAppointment(Appointment model)
+        public async Task<HttpResponseMessage> AssignAppointment(Appointment appointment)
         {
+            StringContent appointmentJson = new(
+                JsonConvert.SerializeObject(appointment),
+                Encoding.UTF8,
+                Application.Json);
             //Should we double check here before confirming the appointment?
-            HttpResponseMessage response = await _httpClient.PostAsJsonAsync<Appointment>(API.Booking.createAppointment, model);
+            HttpResponseMessage response = await _httpClient.PostAsync(API.Booking.createAppointment, appointmentJson);
 
-            if (response.IsSuccessStatusCode)
-            {
-                return await response.Content.ReadFromJsonAsync<bool>();
-            }
-            return false;
+            return response;
         }
 
         [HttpPost]
-        public async Task<List<Appointment>> GetConsultantAppointments(ConsultantDailyAppointmentsDTO model)
+        public async Task<string> GetConsultantAppointments(ConsultantDailyAppointmentsDTO dailyAppointments)
         {
-            HttpResponseMessage response = await _httpClient.PostAsJsonAsync(API.Booking.createAppointment, model);
+            StringContent dailyAppointmentsJson = new(
+                JsonConvert.SerializeObject(dailyAppointments),
+                Encoding.UTF8,
+                Application.Json);
+
+            HttpResponseMessage response = await _httpClient.PostAsync(API.Booking.getConsultantAppointments, dailyAppointmentsJson);
 
             if (response.IsSuccessStatusCode)
             {
-                return await response.Content.ReadFromJsonAsync<List<Appointment>>();
+                return await response.Content.ReadAsStringAsync();
             }
 
             return null;

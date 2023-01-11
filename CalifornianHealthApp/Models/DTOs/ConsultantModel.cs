@@ -14,11 +14,10 @@ namespace CalifornianHealthApp.Models.DTOs
 
     public class ConsultantModelList
     {
-        public List<AssignAppointmentDTO> ConsultantCalendars { get; set; }
+        public List<ConsultantCalendarDTO> consultantCalendar { get; set; }
         public List<Consultant> Consultants { get; set; }
         public int SelectedConsultantId { get; set; }
         public SelectList ConsultantsList { get; set; }
-        public SelectList DateList { get; set; }
     }
 
 }

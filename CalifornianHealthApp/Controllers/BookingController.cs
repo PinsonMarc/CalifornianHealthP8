@@ -23,20 +23,33 @@ namespace CalifornianHealthApp.Controllers
         {
             ConsultantModelList conList = new();
 
-            List<Consultant> cons = await _bookingService.FetchConsultants();
-            List<ConsultantCalendarDTO> calendarDTOs = await _bookingService.FetchConsultantCalendars();
-            conList.ConsultantsList = new SelectList(cons, "Id", "FName");
-            conList.Consultants = cons;
+            //List<Consultant> cons = await _bookingService.FetchConsultants();
+            conList.consultantCalendar = await _bookingService.FetchConsultantCalendars();
+            conList.ConsultantsList = new SelectList(conList.consultantCalendar, "Consultant.Id", "Consultant.FName");
             return View(conList);
         }
 
-        //TODO: Change this method to ensure that members do not have to wait endlessly. 
-        public async Task<ActionResult> ConfirmAppointment(Appointment model)
+        [HttpPost]
+        public async Task<IActionResult> ConsultantAppointments(ConsultantDailyAppointmentsDTO dto)
         {
-            //This needs to be reassessed. Before confirming the appointment, should we check if the consultant calendar is still available?
-            bool result = await _bookingService.AssignAppointment(model);
+            try
+            {
+                return Ok(await _bookingService.GetConsultantAppointments(dto));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error whule getting consultant appointments");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
+        }
 
-            return View(result);
+        //TODO: Change this method to ensure that members do not have to wait endlessly. 
+        public async Task<IActionResult> ConfirmAppointment(Appointment model)
+        {
+            HttpResponseMessage response = await _bookingService.AssignAppointment(model);
+            if (response.IsSuccessStatusCode)
+                return View();
+            return new StatusCodeResult((int)response.StatusCode);
         }
     }
 }

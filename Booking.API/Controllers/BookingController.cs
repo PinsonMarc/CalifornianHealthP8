@@ -66,23 +66,31 @@ public class BookingController : Controller
 
     [HttpPost]
     [Route("/AssignAppointment")]
-    public bool AssignAppointment(AssignAppointmentDTO model)
+    public IActionResult AssignAppointment([FromBody] AssignAppointmentDTO model)
     {
-        if (IsAppointmentFree(model.AppointmentID))
+        try
         {
-            if (!CreatePatient(model.patient)) return false;
-            Appointment? appointment = _context.appointments.Single(a => a.Id == model.AppointmentID);
-            appointment.PatientId = model.patient.ID;
-            _context.SaveChanges();
+            if (IsAppointmentFree(model.AppointmentID))
+            {
+                if (!CreatePatient(model.patient)) return false;
+                Appointment? appointment = _context.appointments.Single(a => a.Id == model.AppointmentID);
+                appointment.PatientId = model.patient.ID;
+                _context.SaveChanges();
 
-            return true;
+                return Ok();
+            }
+            return Conflict();
         }
-        return false;
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "error while creating patient");
+            return StatusCode(500);
+        }
     }
 
     [HttpPost]
     [Route("/ConsultantAppointments")]
-    public List<Appointment> ConsultantAppointments(ConsultantDailyAppointmentsDTO model)
+    public List<Appointment> ConsultantAppointments([FromBody] ConsultantDailyAppointmentsDTO model)
     {
         DateTime minDate = model.Day.Date;
         DateTime maxDate = minDate.AddDays(1);
@@ -91,27 +99,15 @@ public class BookingController : Controller
             .Where(c => c.ConsultantId == model.ConsultantId && c.PatientId == null && c.StartDateTime >= minDate && c.StartDateTime <= maxDate)
             .OrderBy(a => a.StartDateTime).ToList();
 
-        //DateTime[] res = new DateTime[appointments.Count];
-        //for (int i = 0; i < appointments.Count; i++)
-        //    res[i] = appointments[i].StartDateTime;
-
         return appointments;
     }
 
     private bool CreatePatient(Patient patient)
     {
-        try
-        {
-            patient.ID = null;
-            _context.patients.Add(patient);
-            _context.SaveChanges();
-            return true;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "error while creating patient");
-            return false;
-        }
+        patient.ID = null;
+        _context.patients.Add(patient);
+        _context.SaveChanges();
+        return true;
     }
 
     private bool IsAppointmentFree(int appointmentId)
