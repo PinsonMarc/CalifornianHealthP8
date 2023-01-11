@@ -72,7 +72,8 @@ public class BookingController : Controller
         {
             if (IsAppointmentFree(model.AppointmentID))
             {
-                if (!CreatePatient(model.patient)) return false;
+                CreatePatient(model.patient);
+
                 Appointment? appointment = _context.appointments.Single(a => a.Id == model.AppointmentID);
                 appointment.PatientId = model.patient.ID;
                 _context.SaveChanges();
@@ -102,12 +103,11 @@ public class BookingController : Controller
         return appointments;
     }
 
-    private bool CreatePatient(Patient patient)
+    private void CreatePatient(Patient patient)
     {
         patient.ID = null;
         _context.patients.Add(patient);
         _context.SaveChanges();
-        return true;
     }
 
     private bool IsAppointmentFree(int appointmentId)

@@ -4,6 +4,7 @@ using Domain.DTO;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Net;
 
 namespace CalifornianHealthApp.Controllers
 {
@@ -23,7 +24,6 @@ namespace CalifornianHealthApp.Controllers
         {
             ConsultantModelList conList = new();
 
-            //List<Consultant> cons = await _bookingService.FetchConsultants();
             conList.consultantCalendar = await _bookingService.FetchConsultantCalendars();
             conList.ConsultantsList = new SelectList(conList.consultantCalendar, "Consultant.Id", "Consultant.FName");
             return View(conList);
@@ -43,13 +43,30 @@ namespace CalifornianHealthApp.Controllers
             }
         }
 
-        //TODO: Change this method to ensure that members do not have to wait endlessly. 
-        public async Task<IActionResult> ConfirmAppointment(Appointment model)
+        [HttpPost]
+        public async Task<IActionResult> ConfirmAppointment([FromBody] int appointmentId)
         {
-            HttpResponseMessage response = await _bookingService.AssignAppointment(model);
+            AssignAppointmentDTO dto = new()
+            {
+                AppointmentID = appointmentId,
+                patient = new Patient
+                {
+                    ID = 1,
+                    FName = "defaultName"
+                }
+            };
+            HttpResponseMessage response = await _bookingService.AssignAppointment(dto);
             if (response.IsSuccessStatusCode)
-                return View();
-            return new StatusCodeResult((int)response.StatusCode);
+                return Ok();
+            if (response.StatusCode == HttpStatusCode.Conflict) return Conflict("The appointment just got reserved by an other user");
+            return BadRequest();
+        }
+
+        [HttpGet]
+        public IActionResult ConfirmAppointment()
+        {
+            return View();
         }
     }
+
 }

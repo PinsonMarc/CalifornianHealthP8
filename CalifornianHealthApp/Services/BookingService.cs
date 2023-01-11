@@ -2,8 +2,6 @@
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Text;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace CalifornianHealthApp.Services
 {
@@ -35,14 +33,10 @@ namespace CalifornianHealthApp.Services
         }
 
         [HttpPost]
-        public async Task<HttpResponseMessage> AssignAppointment(Appointment appointment)
+        public async Task<HttpResponseMessage> AssignAppointment(AssignAppointmentDTO dto)
         {
-            StringContent appointmentJson = new(
-                JsonConvert.SerializeObject(appointment),
-                Encoding.UTF8,
-                Application.Json);
             //Should we double check here before confirming the appointment?
-            HttpResponseMessage response = await _httpClient.PostAsync(API.Booking.createAppointment, appointmentJson);
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync<AssignAppointmentDTO>(API.Booking.createAppointment, dto);
 
             return response;
         }
@@ -50,12 +44,7 @@ namespace CalifornianHealthApp.Services
         [HttpPost]
         public async Task<string> GetConsultantAppointments(ConsultantDailyAppointmentsDTO dailyAppointments)
         {
-            StringContent dailyAppointmentsJson = new(
-                JsonConvert.SerializeObject(dailyAppointments),
-                Encoding.UTF8,
-                Application.Json);
-
-            HttpResponseMessage response = await _httpClient.PostAsync(API.Booking.getConsultantAppointments, dailyAppointmentsJson);
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync<ConsultantDailyAppointmentsDTO>(API.Booking.getConsultantAppointments, dailyAppointments);
 
             if (response.IsSuccessStatusCode)
             {
