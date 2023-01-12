@@ -9,6 +9,8 @@ public class BookingController : Controller
 {
     private readonly CHDBContext _context;
     private readonly ILogger<BookingController> _logger;
+    //Use to make code thread safe
+    private SemaphoreSlim _semaphore = new(1, 1);
 
     public BookingController(CHDBContext context, ILogger<BookingController> logger)
     {
@@ -66,26 +68,30 @@ public class BookingController : Controller
 
     [HttpPost]
     [Route("/AssignAppointment")]
-    public IActionResult AssignAppointment([FromBody] AssignAppointmentDTO model)
+    public async Task<IActionResult> AssignAppointment([FromBody] AssignAppointmentDTO model)
     {
+        await _semaphore.WaitAsync();
         try
         {
-            if (IsAppointmentFree(model.AppointmentID))
-            {
-                CreatePatient(model.patient);
+            //this code is never run simultanously 
+            if (!IsAppointmentFree(model.AppointmentID)) return Conflict();
 
-                Appointment? appointment = _context.appointments.Single(a => a.Id == model.AppointmentID);
-                appointment.PatientId = model.patient.ID;
-                _context.SaveChanges();
+            CreatePatient(model.patient);
+            Appointment? appointment = _context.appointments.Single(a => a.Id == model.AppointmentID);
+            appointment.PatientId = model.patient.ID;
+            _context.SaveChanges();
 
-                return Ok();
-            }
-            return Conflict();
+            return Ok();
+
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "error while creating patient");
             return StatusCode(500);
+        }
+        finally
+        {
+            _semaphore.Release();
         }
     }
 

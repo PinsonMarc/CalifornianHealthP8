@@ -32,7 +32,7 @@ public class DbInitializer
 
     public void Seed()
     {
-
+        //Developent data
         _modelBuilder.Entity<Consultant>().HasData(
             new() { Id = 1, FName = "Jane", LName = "Doe", Speciality = "Dentist" },
             new() { Id = 2, FName = "Russel", LName = "Sprout", Speciality = "Pediatrist" },
