@@ -46,6 +46,7 @@ namespace CalifornianHealthApp.Controllers
         [HttpPost]
         public async Task<IActionResult> ConfirmAppointment([FromBody] int appointmentId)
         {
+            //default patient, need to be replaced by an identity
             AssignAppointmentDTO dto = new()
             {
                 AppointmentID = appointmentId,
