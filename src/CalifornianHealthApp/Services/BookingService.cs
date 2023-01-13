@@ -35,7 +35,6 @@ namespace CalifornianHealthApp.Services
         [HttpPost]
         public async Task<HttpResponseMessage> AssignAppointment(AssignAppointmentDTO dto)
         {
-            //Should we double check here before confirming the appointment?
             HttpResponseMessage response = await _httpClient.PostAsJsonAsync<AssignAppointmentDTO>(API.Booking.createAppointment, dto);
 
             return response;
@@ -45,13 +44,9 @@ namespace CalifornianHealthApp.Services
         public async Task<string> GetConsultantAppointments(ConsultantDailyAppointmentsDTO dailyAppointments)
         {
             HttpResponseMessage response = await _httpClient.PostAsJsonAsync<ConsultantDailyAppointmentsDTO>(API.Booking.getConsultantAppointments, dailyAppointments);
+            response.EnsureSuccessStatusCode();
 
-            if (response.IsSuccessStatusCode)
-            {
-                return await response.Content.ReadAsStringAsync();
-            }
-
-            return null;
+            return await response.Content.ReadAsStringAsync();
         }
     }
 }

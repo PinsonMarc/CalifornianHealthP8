@@ -45,8 +45,8 @@ $(document).ready(function () {
         }
         $.ajax({
             type: "POST",
-            url: "/Booking/ConfirmAppointment",
-            data: selectedAppointment,
+            url: "/Booking/ConfirmAppointment/" + selectedAppointment,
+            //data: selectedAppointment,
             contentType: "application/json; charset=utf-8",
             success: function () {
                 window.location = "/Booking/ConfirmAppointment";

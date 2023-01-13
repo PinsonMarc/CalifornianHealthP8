@@ -19,7 +19,7 @@ namespace CalifornianHealthApp.Controllers
             _logger = logger;
         }
 
-        // GET: Booking
+        // GET: GetConsultantCalendar
         public async Task<ActionResult> GetConsultantCalendar()
         {
             ConsultantModelList conList = new();
@@ -44,7 +44,8 @@ namespace CalifornianHealthApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ConfirmAppointment([FromBody] int appointmentId)
+        [Route("[controller]/[action]/{appointmentId}")]
+        public async Task<IActionResult> ConfirmAppointment([FromRoute] int appointmentId)
         {
             //default patient, need to be replaced by an identity
             AssignAppointmentDTO dto = new()
@@ -69,5 +70,4 @@ namespace CalifornianHealthApp.Controllers
             return View();
         }
     }
-
 }

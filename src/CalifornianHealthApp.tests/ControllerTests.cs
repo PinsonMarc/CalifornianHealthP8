@@ -1,7 +1,8 @@
 namespace CalifornianHealthApp.tests
 {
-    public class UnitTest1
+    public class ControllerTests
     {
+        //Maybe just try mocking Booking Services
         [Fact]
         public void Test1()
         {
