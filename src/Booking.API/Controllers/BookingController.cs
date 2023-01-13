@@ -37,8 +37,57 @@ public class BookingController : Controller
             .ThenBy(a => a.StartDateTime)
             .ToList();
 
-        List<ConsultantCalendarDTO> res = new();
+        List<ConsultantCalendarDTO> res = CalculateCalendar(appointments);
 
+        return res;
+    }
+
+    [HttpPost]
+    [Route("/ConsultantAppointments")]
+    public List<Appointment> ConsultantAppointments([FromBody] ConsultantDailyAppointmentsDTO model)
+    {
+        DateTime minDate = model.Day.Date;
+        DateTime maxDate = minDate.AddDays(1);
+        //Free appointment are non assigned appointment +> (patienId == null)
+        List<Appointment> appointments = _context.appointments
+            .Where(c => c.ConsultantId == model.ConsultantId && c.PatientId == null && c.StartDateTime >= minDate && c.StartDateTime <= maxDate)
+            .OrderBy(a => a.StartDateTime).ToList();
+
+        return appointments;
+    }
+
+    [HttpPost]
+    [Route("/AssignAppointment")]
+    public async Task<IActionResult> AssignAppointment([FromBody] AssignAppointmentDTO model)
+    {
+        await _semaphore.WaitAsync();
+        try
+        {
+            //this code is never run simultanously 
+            if (!IsAppointmentFree(model.AppointmentID)) return Conflict();
+
+            CreatePatient(model.Patient);
+            Appointment? appointment = _context.appointments.Single(a => a.Id == model.AppointmentID);
+            appointment.PatientId = model.Patient.ID;
+            _context.SaveChanges();
+
+            return Ok();
+
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "error while creating patient");
+            return StatusCode(500);
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
+    }
+
+    private List<ConsultantCalendarDTO> CalculateCalendar(List<Appointment> appointments)
+    {
+        List<ConsultantCalendarDTO> res = new();
         int? currentConsultant = -1;
         DateTime currentDate = DateTime.MinValue;
         Appointment appointment;
@@ -56,57 +105,12 @@ public class BookingController : Controller
                     Dates = new List<DateTime?>()
                 });
             }
-            if (appointment.StartDateTime.Date != currentDate)
-            {
-                currentDate = appointment.StartDateTime.Date;
-                res.Last().Dates.Add(currentDate);
-            }
-        }
 
+            if (appointment.StartDateTime.Date == currentDate) continue;
+            currentDate = appointment.StartDateTime.Date;
+            res.Last().Dates.Add(currentDate);
+        }
         return res;
-    }
-
-    [HttpPost]
-    [Route("/AssignAppointment")]
-    public async Task<IActionResult> AssignAppointment([FromBody] AssignAppointmentDTO model)
-    {
-        await _semaphore.WaitAsync();
-        try
-        {
-            //this code is never run simultanously 
-            if (!IsAppointmentFree(model.AppointmentID)) return Conflict();
-
-            CreatePatient(model.patient);
-            Appointment? appointment = _context.appointments.Single(a => a.Id == model.AppointmentID);
-            appointment.PatientId = model.patient.ID;
-            _context.SaveChanges();
-
-            return Ok();
-
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "error while creating patient");
-            return StatusCode(500);
-        }
-        finally
-        {
-            _semaphore.Release();
-        }
-    }
-
-    [HttpPost]
-    [Route("/ConsultantAppointments")]
-    public List<Appointment> ConsultantAppointments([FromBody] ConsultantDailyAppointmentsDTO model)
-    {
-        DateTime minDate = model.Day.Date;
-        DateTime maxDate = minDate.AddDays(1);
-        //Free appointment are non assigned appointment +> (patienId == null)
-        List<Appointment> appointments = _context.appointments
-            .Where(c => c.ConsultantId == model.ConsultantId && c.PatientId == null && c.StartDateTime >= minDate && c.StartDateTime <= maxDate)
-            .OrderBy(a => a.StartDateTime).ToList();
-
-        return appointments;
     }
 
     private void CreatePatient(Patient patient)

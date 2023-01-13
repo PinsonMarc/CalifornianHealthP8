@@ -6,6 +6,6 @@ namespace Domain.DTO
     {
         public int AppointmentID { get; set; }
 
-        public Patient patient { get; set; }
+        public Patient Patient { get; set; }
     }
 }

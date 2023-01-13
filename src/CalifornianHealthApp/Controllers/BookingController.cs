@@ -52,7 +52,7 @@ namespace CalifornianHealthApp.Controllers
             AssignAppointmentDTO dto = new()
             {
                 AppointmentID = appointmentId,
-                patient = new Patient
+                Patient = new Patient
                 {
                     ID = 1,
                     FName = "defaultName"
