@@ -34,7 +34,8 @@ namespace CalifornianHealthApp.Controllers
         {
             try
             {
-                return Ok(await _bookingService.GetConsultantAppointments(dto));
+                string res = await _bookingService.GetConsultantAppointments(dto);
+                return Ok(res);
             }
             catch (Exception ex)
             {
