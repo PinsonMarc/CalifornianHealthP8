@@ -7,6 +7,8 @@ I have decided to use a newer version of .Net for this project to write a more m
 
 ## Docker and microservices
 
+![architecture](https://github.com/PinsonMarc/CalifornianHealth/blob/master/documentation/Project%20architecture.png)
+
 As the customer request to improve the website reliability I have decided to use **docker** and **3 microservices** 
 #### Docker
 Docker containers provide a level of isolation between different services, which means that a failure in one service will not affect the others. This improves the overall reliability and resilience of the system.
