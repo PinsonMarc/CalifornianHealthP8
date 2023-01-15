@@ -14,18 +14,18 @@ As the customer request to improve the website reliability I have decided to use
 Docker containers provide a level of isolation between different services, which means that a failure in one service will not affect the others. This improves the overall reliability and resilience of the system.
 #### Microservices
 Microservices can be scaled independently and managed independently, greatly improving maintainability and reducing dependencies. I have created 3 for this projects but the project is thought to easily include others:	
-	-**californianhealthapp** is the web application
-	-**booking-api** is an api accessible from `californianhealthapp` to manage appointments
-	-**sqldata** contains the application database
+- **californianhealthapp** is the web application
+- **booking-api** is an api accessible from `californianhealthapp` to manage appointments
+- **sqldata** contains the application database
 To further understand, see the configurations at `docker-compose.yml` as well as in each dockerfiles
 
 ## New implementation
 
 I changed the implementation of the booking system : 
-	- The webapp 's `BookingController` now use a `BookingService` which access the `HTTPClient` to make the api calls
-	- The Database have been seeded for production purpose with 3 consultants and a dozen appointments
-	- The `booking-api`'s controller really contain the application and only him access the data context. It has been implemented against concurrency issues
-	- Free appointment are those where the `PatientId` has not been defined
+- The webapp 's `BookingController` now use a `BookingService` which access the `HTTPClient` to make the api calls
+- The Database have been seeded for production purpose with 3 consultants and a dozen appointments
+- The `booking-api`'s controller really contain the application and only him access the data context. It has been implemented against concurrency issues
+- Free appointment are those where the `PatientId` has not been defined
 
 ## Testing
 
